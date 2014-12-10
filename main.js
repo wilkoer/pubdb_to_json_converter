@@ -1,8 +1,6 @@
 $(document).ready(function() {
-	var converter = new pubDB.json(function() {
-		var json = converter.getJSON();
-
-		$('body').html(JSON.stringify(json));
+	var converter = new pubDB.json(function(data) {
+		$('body').html(JSON.stringify(data));
 	});
 });
 	

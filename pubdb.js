@@ -115,11 +115,7 @@
 			}
 		});
 
-		callback();
-	};
-
-	PubDBtoJSONConverter.prototype.getJSON = function() {
-		return this.json;
+		callback(_this.json);
 	};
 
 	global.pubDB = global.pubDB || {};
