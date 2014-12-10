@@ -11,16 +11,18 @@ var router = express.Router();
 var dbPath = "http://www.medien.ifi.lmu.de/cgi-bin/search.pl?all:all:all:all:all";
 var pubHtml = "";
 
-// get html and save in pubHtml
-request(dbPath, function(err, response, body) {
-	if (!err && response.statusCode == 200) {
-		pubHtml = iconv.decode(new Buffer(body), "utf8");
-	}
-});
+
 
 // send pubHtml on request
 router.get('/',function(req,res){
-	res.send(pubHtml)
+	// get html and save in pubHtml
+	request(dbPath, function(err, response, body) {
+		if (!err && response.statusCode == 200) {
+			pubHtml = iconv.decode(new Buffer(body), "utf8");
+			console.log("publications requested");
+			res.send(pubHtml)
+		}
+	});
 });
 
 router.get('/base', function(req, res) {
