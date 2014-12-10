@@ -16,9 +16,9 @@ var pubHtml = "";
 // send pubHtml on request
 router.get('/',function(req,res){
 	// get html and save in pubHtml
-	request(dbPath, function(err, response, body) {
+	request({"uri": dbPath, "content-type": "text/html;", "encoding": null}, function(err, response, body) {
 		if (!err && response.statusCode == 200) {
-			pubHtml = iconv.decode(new Buffer(body), "utf8");
+			pubHtml = iconv.decode(new Buffer(body), "latin1");
 			console.log("publications requested");
 			res.send(pubHtml)
 		}
