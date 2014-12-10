@@ -1,0 +1,16 @@
+{
+  "name": "pubDBtoJSON",
+  "version": "0.0.1",
+  "private": true,
+  "author": "Alexander Schenker <alexander.schenker@campus.lmu.de>",
+  "scripts": {
+    "start": "node converter.js"
+  },
+  "dependencies": {
+    "express": "~4.9.0",
+    "request": "~2.50.0",
+    "cors": "~2.5.2",
+    "iconv-lite": "0.4.5"
+  },
+  "license": "MIT"
+}
