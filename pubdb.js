@@ -1,24 +1,26 @@
 (function($, global) {
-	var PubDBtoJSONConverter = function(callback) {
-			this.pubDBpath = "http://localhost:3000/"; // <-- node server url here(conversion.js)  
-			this.$pubDB = null;
-			this.callback = callback;
-			this.json = [];
-			this.init();
+	var PubDBtoJSONConverter = function() {
+		this.pubDBpath = "http://localhost:3000/"; // <-- node server url here(conversion.js)  
+		this.$pubDB = null;
+		// this.callback = callback;
+		this.json = [];
+		// this.init();
 	};
 
-	PubDBtoJSONConverter.prototype.init = function() {
+	PubDBtoJSONConverter.prototype.init = function(callback) {
 		var _this = this;
 
 		// get html data from node server and create json
 		$.get(this.pubDBpath, function(data) {
 			_this.$pubDB = $(data); // create jquery object from html code
-			_this.buildJSON(_this.$pubDB, _this.callback);
+			console.log(_this.$pubDB);
+			callback(_this.$pubDB);
+			// _this.buildJSON(_this.$pubDB, _this.callback);
 		})
 	};
 
 	PubDBtoJSONConverter.prototype.buildJSON = function($pubObject, callback) {
-		var $tableRow = $pubObject.find('tbody > tr'),
+		var $tableRow = $pubObject.find('tr'),
 			_this = this;
 
 		/*	<tr></tr> == publication object
@@ -122,5 +124,5 @@
 	};
 
 	global.pubDB = global.pubDB || {};
-	global.pubDB.getJson = PubDBtoJSONConverter;
+	global.pubDB.json = PubDBtoJSONConverter;
 })(jQuery, window);
