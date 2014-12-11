@@ -1,4 +1,5 @@
 $(document).ready(function() {
+
 	// create a new pubDB json object
 	var converter = new pubDB.json();
 
@@ -6,7 +7,7 @@ $(document).ready(function() {
 	var dbObject = converter.init(function(dbObject) {
 
 		// pass dbObject to buildJSON method -> get a json object back (<- created on client side)
-		converter.buildJSON(dbObject, function(data) {
+		converter.buildPublicationJSON(dbObject, function(data) {
 			$('body').html(JSON.stringify(data));
 		});
 

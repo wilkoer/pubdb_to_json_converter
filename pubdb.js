@@ -19,7 +19,7 @@
 		})
 	};
 
-	PubDBtoJSONConverter.prototype.buildJSON = function($pubObject, callback) {
+	PubDBtoJSONConverter.prototype.buildPublicationJSON = function($pubObject, callback) {
 		var $tableRow = $pubObject.find('tr'),
 			_this = this;
 
