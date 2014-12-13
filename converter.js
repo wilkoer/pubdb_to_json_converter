@@ -4,7 +4,7 @@ var iconv   = require('iconv-lite');
 var cors 	= require('cors');
 var fs 		= require('fs');
 
-// jquery needed for easy DOM-manipulation..
+// jquery needed for easy DOM-manipulation and reusablity of client library..
 var jsdom = require("jsdom-nogyp"); 
 var window = jsdom.jsdom().createWindow();
 jQuery = require("jquery")(window); 
@@ -12,8 +12,6 @@ jQuery = require("jquery")(window);
 // custom module for converting pubDB html to json
 var pubdb 	= require('./lib/pubdb_module.js');
 var converter = new pubdb();
-
-
 
 var app = express();
 app.use(cors()); // allow cross-origin resource-sharing
@@ -23,6 +21,8 @@ var router = express.Router();
 var basePath = "http://www.medien.ifi.lmu.de"
 	, dbPath = "/cgi-bin/search.pl?all:all:all:all:all"
 	, pubHtml = "";
+
+var pubJson = [];
 
 
 // send pubHtml on request
@@ -50,6 +50,7 @@ router.get('/publications', function(req, res) {
 			
 			// convert html to json and return json to client
 			converter.buildPublicationJSON(jQuery(pubHtml), function(data) {
+				pubJson = data;
 				res.json(data);
 			});
 
@@ -59,7 +60,9 @@ router.get('/publications', function(req, res) {
 
 // return authors
 router.get('/authors', function(req, res) {
-	res.send("todo");
+	converter.buildAuthorJSON(pubJson, function(data) {
+		console.log(data)
+	});
 });
 
 

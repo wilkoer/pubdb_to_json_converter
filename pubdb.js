@@ -3,7 +3,8 @@
 		this.pubDBpath = "http://localhost:3000/"; // <-- node server url here(conversion.js)  
 		this.$pubDB = null;
 		// this.callback = callback;
-		this.json = [];
+		this.pubJson = [];
+		this.authorJson = [];
 		// this.init();
 	};
 
@@ -19,6 +20,7 @@
 		})
 	};
 
+	// extracts data from html and builds json
 	PubDBtoJSONConverter.prototype.buildPublicationJSON = function($pubObject, callback) {
 		var $tableRow = $pubObject.find('tr'),
 			_this = this;
@@ -26,10 +28,11 @@
 		/*	<tr></tr> == publication object
 		*	traverse all table rows and extract data 		
 		*/
-		$.each($tableRow, function() {
+		$.each($tableRow, function(index) {
 			if (!$(this).find('td').eq(0).hasClass('year_separator')) { // ignore year separators
 				var object = {}; // single entry object
 
+				object.id = 'pub_' + index;	// unique id
 				object.authors = []; 		// array of authors (name, url)
 				object.title = {};			// publication title		
 				object.description = {};	// publication description
@@ -68,7 +71,9 @@
 				for (var i = 0; i < authorsArray.length; i++) {
 					var person = {};
 					person.name = authorsArray[i].replace(/(<([^>]+)>)/ig, ""); // remove html tags from name 
-					person.name = person.name.replace('\n\t\t', '');			// remove tabs etc.
+					person.name = person.name.replace('\n\t\t', '');		// remove tabs etc.
+					person.name.trim();
+
 					try {
 						person.url = $(authorsArray[i]).attr('href');			// if surrounded by <a>-tag, keep href
 					} catch(e) {
@@ -115,12 +120,67 @@
 				*/
 
 				// add current object to json-array
-				_this.json.push(object);
+				_this.pubJson.push(object);
 			}
 		});
 		
 		// callback, when finished
-		callback(_this.json);
+		callback(_this.pubJson);
+	};
+
+	// extracts authors from json and creates new, author-centered json
+	PubDBtoJSONConverter.prototype.buildAuthorJSON = function(json, callback) {
+		var authorNamesArray = [];
+
+		var hash = function(obj){
+		  return obj.name;
+		};
+
+		var authorDictionary = {};
+
+		// go through all publications
+		for (var i = 0; i < json.length; i++) {
+			// go through all authors of current publication
+			for (var j = 0; j < json[i].authors.length; j++) {
+
+				// if name is not part of authorNamesArray yet, add it and create author object
+				if (authorNamesArray.indexOf(json[i].authors[j].name) < 0) {
+					authorNamesArray.push(json[i].authors[j].name);
+					var authorObject = {};
+
+					// add this author name to object
+					authorObject.name = json[i].authors[j].name.trim();
+
+					// create new publications array and add current publication
+					authorObject.publications = [];
+					authorObject.publications.push(json[i].id);
+
+					// unique id
+					authorObject.id = i+''+j;
+
+					// author url
+					if (typeof(json[i].authors[j].url) !== 'undefined') {
+						authorObject.url = json[i].authors[j].url;
+					}
+
+					authorDictionary[hash(authorObject)] = authorObject;
+				} else {
+					authorDictionary[json[i].authors[j].name.trim()].publications.push(json[i].id);
+				}
+
+			};
+		};
+
+		var keys = [];
+		for (var key in authorDictionary) {
+			keys.push(key)
+		}
+		
+		for (var i = 0; i < keys.length; i++) {
+			this.authorJson.push(authorDictionary[keys[i]]);
+		};
+
+		callback(this.authorJson);
 	};
 
 	global.pubDB = global.pubDB || {};
