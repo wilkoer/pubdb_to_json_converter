@@ -136,6 +136,7 @@
 		  return obj.name;
 		};
 
+		// author hashmap
 		var authorDictionary = {};
 
 		// go through all publications
@@ -163,23 +164,28 @@
 						authorObject.url = json[i].authors[j].url;
 					}
 
+					// put author into "dictionary"
 					authorDictionary[hash(authorObject)] = authorObject;
 				} else {
+					// get author from hashmap and add publication
 					authorDictionary[json[i].authors[j].name.trim()].publications.push(json[i].id);
 				}
 
 			};
 		};
 
+		// convert to json-array 
 		var keys = [];
+
 		for (var key in authorDictionary) {
 			keys.push(key)
 		}
-		
+
 		for (var i = 0; i < keys.length; i++) {
 			this.authorJson.push(authorDictionary[keys[i]]);
 		};
 
+		// callback, when finished
 		callback(this.authorJson);
 	};
 
