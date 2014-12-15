@@ -4,6 +4,10 @@ var iconv   = require('iconv-lite');
 var cors 	= require('cors');
 var fs 		= require('fs');
 
+// OpenShift environment variables (only needed for hosting on openshift.com)
+var server_port = process.env.OPENSHIFT_NODEJS_PORT || 3000;
+var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
+
 // jquery needed for easy DOM-manipulation and reusablity of client library..
 var jsdom = require("jsdom-nogyp"); 
 var window = jsdom.jsdom().createWindow();
@@ -70,8 +74,5 @@ router.get('/authors', function(req, res) {
 
 app.use(router);
 
-var server = app.listen(3000, function () {
- 	var host = server.address().address;
- 	var port = server.address().port;
- 	console.log("Server running on port " + port);
-});
+var server = app.listen(server_port, server_ip_address, function () {
+  	console.log("Listening on " + server_ip_address + ", server_port " + server_port);
