@@ -14,6 +14,11 @@ It offers different functions, i.e. for creating a JSON-Array containing all pub
 ##### How to use? 
 
 You first have to specify the path to your pubDB proxy-server (converter.js) in line 3 of pubdb.js. 
+```javascript
+    var PubDBtoJSONConverter = function() {
+		this.pubDBpath = "yourserverhere"; // <-- node server url here (converter.js)  
+```
+
 
 Then, create a new pubDB converter.
 ```javascript
@@ -28,6 +33,23 @@ The init()-function establishes a connection with the proxy-server. The callback
 	// ...
 	});
 ```
+
+You'll need to pass the dbObject in order to build the publications json. The result of the callback-function is a JSON-Array containing all publications as objects. 
+```javascript
+    	// pass dbObject to buildJSON method -> get a json object back 
+	converter.buildPublicationJSON(dbObject, function(pubData) {
+	// ...
+	}
+```
+
+To receive the authors JSON, just pass the pubData-Array from buildPublicationJSON().
+```javascript
+    	converter.buildAuthorJSON(pubData, function(authorData) {
+    	// ...
+    	}
+```
+
+For a working example, check main.js.
 
 ##### Publications
 Example publication object:
