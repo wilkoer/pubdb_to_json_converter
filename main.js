@@ -16,12 +16,13 @@ $(document).ready(function() {
 
 			converter.buildAuthorJSON(pubData, function(authorData) {
 				authorsJSON = authorData;
-				console.log(JSON.stringify(authorsJSON));
+				//console.log(JSON.stringify(authorsJSON));
 
+				$('#publications').val(JSON.stringify(publicationsJSON)).show();
+				$('#authors').val(JSON.stringify(authorsJSON)).show();
+				$('h2').show();
 
 				$('img').hide();
-				$('span').text(new Date() - start + "ms");
-
 			});
 		});
 	});
