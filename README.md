@@ -9,7 +9,25 @@ You can find a live example implementation here: http://www.cip.ifi.lmu.de/~sche
 #### pubdb.js 
 Javascript library for generating json on client-side.
 
-It offers a function to create a JSON-Array containing all publications (buildPublicationJSON()) and another function to create a JSON-Array containing all authors (buildAuthorJSON()).
+It offers different functions, i.e. for creating a JSON-Array containing all publications (buildPublicationJSON()) or for creating a JSON-Array containing all authors (buildAuthorJSON()).
+
+##### How to use? 
+
+You first have to specify the path to your pubDB proxy-server (converter.js) in line 3 of pubdb.js. 
+
+Then, create a new pubDB converter.
+```javascript
+    // create a new pubDB json object
+	var converter = new pubDB.json();
+```
+
+The init()-function establishes a connection with the proxy-server. The callback-functions' result is a jQuery-object of the pubDB HTML.
+```javascript
+    // initialize -> get a jQuery object of html contents in callback function
+	converter.init(function(dbObject) {
+	// ...
+	});
+```
 
 ##### Publications
 Example publication object:
@@ -40,6 +58,8 @@ Example publication object:
     "award": false
 }
 ```
+
+##### Authors 
 
 Example author object:
 ```json
