@@ -96,6 +96,7 @@ Example author object:
 
 #### converter.js
 Proxy server that grabs html from http://www.medien.ifi.lmu.de/cgi-bin/search.pl?all:all:all:all:all and passes it to client.
+Please check out the openshift-branch of this repository to find a pre-configured build for hosting on https://openshift.redhat.com/
 
 #### index.html and main.js 
 Example implementation
