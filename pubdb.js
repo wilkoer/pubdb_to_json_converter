@@ -1,6 +1,6 @@
 (function($, global) {
 	var PubDBtoJSONConverter = function() {
-		this.pubDBpath = "http://localhost:3000/"; // <-- node server url here (converter.js)  
+		this.pubDBpath = "http://pubdb-infovisproject.rhcloud.com/"; // <-- node server url here (converter.js)  
 		this.$pubDB = null;
 		// this.callback = callback;
 		this.pubJson = [];
