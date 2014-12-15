@@ -1,6 +1,6 @@
 (function($, global) {
 	var PubDBtoJSONConverter = function() {
-		this.pubDBpath = "http://localhost:3000/"; // <-- node server url here(conversion.js)  
+		this.pubDBpath = "http://localhost:3000/"; // <-- node server url here (converter.js)  
 		this.$pubDB = null;
 		// this.callback = callback;
 		this.pubJson = [];
@@ -14,35 +14,38 @@
 		// get html data from node server and create json
 		$.get(this.pubDBpath, function(data) {
 			_this.$pubDB = $(data); // create jquery object from html code
-			console.log(_this.$pubDB);
+
 			callback(_this.$pubDB);
-			// _this.buildJSON(_this.$pubDB, _this.callback);
 		})
 	};
 
 	// extracts data from html and builds json
 	PubDBtoJSONConverter.prototype.buildPublicationJSON = function($pubObject, callback) {
 		var $tableRow = $pubObject.find('tr'),
-			_this = this;
+			_this = this,
+			currentYear;
 
 		/*	<tr></tr> == publication object
 		*	traverse all table rows and extract data 		
 		*/
 		$.each($tableRow, function(index) {
-			if (!$(this).find('td').eq(0).hasClass('year_separator')) { // ignore year separators
+			if ($(this).find('td').eq(0).hasClass('year_separator')) { 
+				currentYear = $(this).find('td b').text();
+			} else { // ignore year separators
 				var object = {}; // single entry object
 
 				object.id = 'pub_' + index;	// unique id
+				object.year = currentYear;	// publication year
 				object.authors = []; 		// array of authors (name, url)
 				object.title = {};			// publication title		
 				object.description = {};	// publication description
+				object.additionalLinks = [];// additional links in description
+				object.bibfile = "";		// url to bibfile
 				object.downloads = [];		// array of download-links (pdf etc.)
 				object.award = false;		// best-paper award?
 
-
 				$downloads = $(this).find('td:nth-child(1)'); // download links in first td
 				$contents = $(this).find('td:nth-child(2)'); // other contents in second
-
 
 				/*
 					CONTENT START
@@ -72,7 +75,7 @@
 					var person = {};
 					person.name = authorsArray[i].replace(/(<([^>]+)>)/ig, ""); // remove html tags from name 
 					person.name = person.name.replace('\n\t\t', '');		// remove tabs etc.
-					person.name.trim();
+					person.name = person.name.trim();
 
 					try {
 						person.url = $(authorsArray[i]).attr('href');			// if surrounded by <a>-tag, keep href
@@ -94,14 +97,31 @@
 					//console.log("err", e);
 				}
 
-
+				var additionalLinks = [],
+					bibFileLink = null;
 				// description:
 				try {
-					descriptionText = $(_description).text(); 
-					object.description.text = descriptionText;
+					var lastObject = $(_description)[$(_description).length-1]; // last object in description section
+					var firstObject = $(_description)[0];
+
+					if ($(firstObject).find('a').length) { // if links in description..
+						for (var i = 0; i < $(firstObject).find('a').length; i++) {
+							additionalLinks.push($($(firstObject).find('a')[i]).attr('href'));  // ...push them to additionalLinks array
+						};
+						object.additionalLinks = additionalLinks;
+					}
+
+					if (lastObject.text === 'bib') { // check if bib file available
+						bibFileLink = $(lastObject).attr('href');
+					}
+
+					object.bibfile = bibFileLink; 
+
+					var descriptionText = $(_description).html(); 
+					object.description.html = descriptionText;
 
 				} catch(e){
-					//console.log("err", e);
+					console.log("err", e);
 				}
 
 				/*
@@ -157,7 +177,7 @@
 					authorObject.publications.push(json[i].id);
 
 					// unique id
-					authorObject.id = i+''+j;
+					//authorObject.id = i+''+j; // author name is id
 
 					// author url
 					if (typeof(json[i].authors[j].url) !== 'undefined') {

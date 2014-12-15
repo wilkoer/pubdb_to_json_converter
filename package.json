@@ -1,6 +1,6 @@
 {
   "name": "pubDBtoJSON",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "author": "Alexander Schenker <alexander.schenker@campus.lmu.de>",
   "scripts": {

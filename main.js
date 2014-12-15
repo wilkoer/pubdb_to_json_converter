@@ -12,7 +12,7 @@ $(document).ready(function() {
 		// pass dbObject to buildJSON method -> get a json object back (<- created on client side)
 		converter.buildPublicationJSON(dbObject, function(pubData) {
 			publicationsJSON = pubData;
-			console.log(JSON.stringify(publicationsJSON));
+			//console.log(JSON.stringify(publicationsJSON));
 
 			converter.buildAuthorJSON(pubData, function(authorData) {
 				authorsJSON = authorData;
