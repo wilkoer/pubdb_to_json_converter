@@ -44,7 +44,7 @@ router.get('/base', function(req, res) {
 
 // return publications
 router.get('/publications', function(req, res) {
-	request({"uri": basePath+dbPath, "content-type": "text/html;", "encoding": null}, function(err, response, body) {
+	/*request({"uri": basePath+dbPath, "content-type": "text/html;", "encoding": null}, function(err, response, body) {
 		if (!err && response.statusCode == 200) {
 			pubHtml = iconv.decode(new Buffer(body), "latin1");
 			
@@ -55,14 +55,16 @@ router.get('/publications', function(req, res) {
 			});
 
 		}
-	});
+	});*/
+	res.send("please use client library");
 });
 
 // return authors
 router.get('/authors', function(req, res) {
-	converter.buildAuthorJSON(pubJson, function(data) {
+	/*converter.buildAuthorJSON(pubJson, function(data) {
 		console.log(data)
-	});
+	});*/
+	res.send("please use client library");
 });
 
 
